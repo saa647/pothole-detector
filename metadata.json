@@ -1,0 +1,6 @@
+{
+  "name": "IoT Road Hazard & Pothole Detector",
+  "description": "Mobile IoT-based road hazard and pothole detection app with live sensor mapping, real-time alerts, and hardware telemetry.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
