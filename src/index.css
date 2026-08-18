@@ -1,0 +1,185 @@
+@import "tailwindcss";
+
+/* Eye-Comfort Theme Palettes */
+:root, [data-theme="soft-sage"] {
+  --app-bg: #f2f6f3;
+  --app-surface: #ffffff;
+  --app-surface-subtle: #edf3ee;
+  --app-border: rgba(186, 214, 196, 0.7);
+  --app-text: #143828;
+  --app-text-muted: #4a6b57;
+  --app-accent: #059669;
+  --app-accent-subtle: #d1fae5;
+  --app-glass-bg: rgba(255, 255, 255, 0.82);
+  --app-glass-border: rgba(209, 231, 218, 0.8);
+}
+
+[data-theme="soft-warm"] {
+  --app-bg: #f7f4ed;
+  --app-surface: #ffffff;
+  --app-surface-subtle: #f1ede1;
+  --app-border: rgba(226, 217, 198, 0.8);
+  --app-text: #292524;
+  --app-text-muted: #78716c;
+  --app-accent: #d97706;
+  --app-accent-subtle: #fef3c7;
+  --app-glass-bg: rgba(255, 255, 255, 0.85);
+  --app-glass-border: rgba(234, 226, 210, 0.85);
+}
+
+[data-theme="soft-sepia"] {
+  --app-bg: #f4ede4;
+  --app-surface: #fdfbf7;
+  --app-surface-subtle: #ebe1d4;
+  --app-border: rgba(217, 203, 187, 0.8);
+  --app-text: #382e28;
+  --app-text-muted: #7c6c5f;
+  --app-accent: #b45309;
+  --app-accent-subtle: #fbe6cf;
+  --app-glass-bg: rgba(253, 251, 247, 0.86);
+  --app-glass-border: rgba(224, 211, 196, 0.85);
+}
+
+[data-theme="soft-dusk"] {
+  --app-bg: #f3f1f8;
+  --app-surface: #ffffff;
+  --app-surface-subtle: #eae6f4;
+  --app-border: rgba(216, 210, 235, 0.75);
+  --app-text: #231e3d;
+  --app-text-muted: #645d86;
+  --app-accent: #7c3aed;
+  --app-accent-subtle: #ede9fe;
+  --app-glass-bg: rgba(255, 255, 255, 0.84);
+  --app-glass-border: rgba(225, 219, 242, 0.8);
+}
+
+[data-theme="soft-dark"] {
+  --app-bg: #0f172a;
+  --app-surface: #1e293b;
+  --app-surface-subtle: #334155;
+  --app-border: rgba(51, 65, 85, 0.8);
+  --app-text: #f8fafc;
+  --app-text-muted: #94a3b8;
+  --app-accent: #38bdf8;
+  --app-accent-subtle: #0369a1;
+  --app-glass-bg: rgba(30, 41, 59, 0.85);
+  --app-glass-border: rgba(71, 85, 105, 0.7);
+}
+
+@layer base {
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background-color: var(--app-bg);
+    color: var(--app-text);
+    -webkit-font-smoothing: antialiased;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+}
+
+/* Glassmorphism Classes for Soft Mode */
+.glass-header {
+  background: var(--app-glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--app-glass-border);
+  box-shadow: 0 4px 20px -2px rgba(148, 163, 184, 0.12);
+  transition: all 0.3s ease;
+}
+
+.glass-card {
+  background: var(--app-surface);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--app-border);
+  box-shadow: 0 8px 30px -4px rgba(148, 163, 184, 0.08), 0 2px 6px -1px rgba(148, 163, 184, 0.04);
+  transition: all 0.3s ease;
+}
+
+.glass-card-interactive {
+  background: var(--app-surface);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--app-border);
+  box-shadow: 0 4px 20px -2px rgba(148, 163, 184, 0.08);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card-interactive:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px -4px rgba(148, 163, 184, 0.16);
+}
+
+.glass-nav {
+  background: var(--app-glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--app-glass-border);
+  box-shadow: 0 -4px 24px -2px rgba(148, 163, 184, 0.1);
+  transition: all 0.3s ease;
+}
+
+.glass-pill {
+  background: var(--app-surface-subtle);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--app-border);
+  transition: all 0.3s ease;
+}
+
+/* Custom Soft Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(203, 213, 225, 0.8);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.9);
+}
+
+/* Pulse radar effect for live hazard detection */
+@keyframes radar-pulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 14px rgba(239, 68, 68, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+}
+
+.animate-radar {
+  animation: radar-pulse 2s infinite;
+}
+
+/* Leaflet styling fixes for smooth soft UI */
+.leaflet-container {
+  font-family: inherit;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  z-index: 1;
+}
+
+.leaflet-popup-content-wrapper {
+  background: rgba(255, 255, 255, 0.96) !important;
+  backdrop-filter: blur(8px);
+  border-radius: 14px !important;
+  box-shadow: 0 10px 25px -3px rgba(15, 23, 42, 0.15) !important;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  padding: 2px !important;
+}
+
+.leaflet-popup-tip {
+  background: rgba(255, 255, 255, 0.96) !important;
+}
+
