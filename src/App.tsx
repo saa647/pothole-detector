@@ -14,7 +14,6 @@ import {
   AppSettings 
 } from './types';
 import { INITIAL_HAZARDS } from './data/initialHazards';
-import { AndroidStatusBar } from './components/AndroidStatusBar';
 import { GlassHeader } from './components/GlassHeader';
 import { BottomNav } from './components/BottomNav';
 import { MapView } from './components/MapView';
@@ -353,12 +352,7 @@ export default function App() {
         id="android-phone-frame"
         className="w-full max-w-md bg-white sm:rounded-[36px] sm:shadow-2xl sm:border sm:border-slate-200/80 overflow-hidden relative min-h-screen sm:min-h-[844px] flex flex-col"
       >
-        {/* Top Native-style Android Status Bar */}
-        <AndroidStatusBar 
-          gpsConnected={telemetry.gpsFix}
-          iotConnected={telemetry.wifiConnected}
-        />
-
+        
         {/* Centered Glassmorphic Header */}
         <GlassHeader
           activeTab={activeTab}
