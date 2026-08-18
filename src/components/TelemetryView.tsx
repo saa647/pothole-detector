@@ -20,16 +20,14 @@ interface TelemetryViewProps {
   telemetry: SensorTelemetry;
   settings: AppSettings;
   onUpdateSettings: (newSettings: Partial<AppSettings>) => void;
-  onTriggerSimulatedBump: (intensity: 'light' | 'medium' | 'severe') => void;
-  onTriggerObstacleToggle: () => void;
+  deviceOnline: boolean;
 }
 
 export const TelemetryView: React.FC<TelemetryViewProps> = ({
   telemetry,
   settings,
   onUpdateSettings,
-  onTriggerSimulatedBump,
-  onTriggerObstacleToggle,
+  deviceOnline,
 }) => {
   const [activeTab, setActiveTab] = useState<'live' | 'diagram' | 'tuning'>('live');
 
@@ -119,33 +117,18 @@ export const TelemetryView: React.FC<TelemetryViewProps> = ({
               </div>
             </div>
 
-            {/* Quick simulated shock triggers */}
+            {/* Real device connection status — no simulated triggers */}
             <div className="mt-4 pt-3 border-t border-slate-200/60 flex items-center justify-between gap-2">
-              <span className="text-[11px] font-semibold text-slate-600">Simulate:</span>
-              <div className="flex items-center gap-1.5 flex-1 justify-end">
-                <button
-                  onClick={() => onTriggerSimulatedBump('light')}
-                  className="px-2 py-1 bg-amber-50 text-amber-700 border border-amber-200 rounded-lg text-xs font-semibold hover:bg-amber-100 active:scale-95 transition-all"
-                >
-                  Minor Dip
-                </button>
-                <button
-                  onClick={() => onTriggerSimulatedBump('severe')}
-                  className="px-2.5 py-1 bg-rose-50 text-rose-700 border border-rose-200 rounded-lg text-xs font-bold hover:bg-rose-100 active:scale-95 transition-all shadow-sm"
-                >
-                  Major Pothole
-                </button>
-                <button
-                  onClick={onTriggerObstacleToggle}
-                  className={`px-2.5 py-1 rounded-lg text-xs font-semibold border transition-all active:scale-95 ${
-                    telemetry.obstacleDetected
-                      ? 'bg-purple-600 text-white border-purple-600'
-                      : 'bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200'
-                  }`}
-                >
-                  {telemetry.obstacleDetected ? 'Clear Obstacle' : 'Add Obstacle'}
-                </button>
-              </div>
+              <span className="text-[11px] font-semibold text-slate-600">Data source:</span>
+              <span
+                className={`px-2.5 py-1 rounded-lg text-xs font-bold border ${
+                  deviceOnline
+                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                    : 'bg-slate-100 text-slate-500 border-slate-200'
+                }`}
+              >
+                {deviceOnline ? 'ESP32 Live' : 'No device connected'}
+              </span>
             </div>
           </div>
 

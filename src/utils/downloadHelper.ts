@@ -60,11 +60,15 @@ export function exportESP32ArduinoCode() {
 #include <TinyGPS++.h>
 #include <FirebaseESP32.h>
 
-#define WIFI_SSID "SAU_IoT_Lab"
-#define WIFI_PASSWORD "sau12345"
+// Replace with YOUR real WiFi network credentials
+#define WIFI_SSID "YOUR_WIFI_SSID"
+#define WIFI_PASSWORD "YOUR_WIFI_PASSWORD"
 
-#define FIREBASE_HOST "sau-iot-road-default-rtdb.firebaseio.com"
-#define FIREBASE_AUTH "AIzaSyA8_EXAMPLE_SAU_KEY"
+// Replace with YOUR real Firebase Realtime Database host and a Database Secret
+// (Firebase Console -> Project Settings -> Service Accounts -> Database secrets)
+#define FIREBASE_HOST "your-project-id-default-rtdb.firebaseio.com"
+#define FIREBASE_AUTH "your-real-database-secret"
+#define DEVICE_ID "ROAD_UNIT_01"
 
 #define TRIG_PIN 5
 #define ECHO_PIN 18
@@ -158,11 +162,35 @@ void loop() {
   bool isPothole = (dip >= DIP_THRESHOLD_CM) || (dip >= 5.0 && zSpike >= ACCEL_THRESHOLD_G);
   bool isObstacle = irTriggered && (currentDist < 25.0);
 
-  if (isPothole || isObstacle) {
-    double lat = gps.location.isValid() ? gps.location.lat() : 25.4312;
-    double lng = gps.location.isValid() ? gps.location.lng() : 68.5358;
-    float speed = gps.speed.isValid() ? gps.speed.kmph() : 38.0;
+  bool gpsValid = gps.location.isValid();
+  double lat = gpsValid ? gps.location.lat() : 0.0;
+  double lng = gpsValid ? gps.location.lng() : 0.0;
+  float speed = gps.speed.isValid() ? gps.speed.kmph() : 0.0;
 
+  // Publish LIVE telemetry every cycle — this is what the app's Telemetry tab reads in real time.
+  // Overwrites a single node per device (setJSON), unlike hazards which are appended (pushJSON).
+  static unsigned long lastTelemetryPush = 0;
+  if (millis() - lastTelemetryPush > 300) {
+    FirebaseJson telemetryJson;
+    telemetryJson.set("distanceCm", currentDist);
+    telemetryJson.set("baselineCm", movingBaseline);
+    telemetryJson.set("dipCm", dip);
+    telemetryJson.set("accelG", zSpike);
+    telemetryJson.set("obstacleDetected", irTriggered);
+    telemetryJson.set("gpsFix", gpsValid);
+    telemetryJson.set("latitude", lat);
+    telemetryJson.set("longitude", lng);
+    telemetryJson.set("speedKmh", speed);
+    telemetryJson.set("headingDeg", gps.course.isValid() ? gps.course.deg() : 0.0);
+    telemetryJson.set("wifiConnected", WiFi.status() == WL_CONNECTED);
+    telemetryJson.set("firebaseSynced", Firebase.ready());
+    telemetryJson.set("timestamp", String(millis()));
+
+    Firebase.setJSON(fbdo, "/telemetry/" DEVICE_ID, telemetryJson);
+    lastTelemetryPush = millis();
+  }
+
+  if (isPothole || isObstacle) {
     String hazardType = isPothole ? "pothole" : "obstacle";
     String severity = dip > 18.0 || zSpike > 0.7 ? "major" : (dip > 10.0 ? "moderate" : "minor");
 
@@ -172,10 +200,12 @@ void loop() {
     json.set("latitude", lat);
     json.set("longitude", lng);
     json.set("dipCm", dip);
-    json.set("accelG", zSpike);
-    json.set("speedKmph", speed);
+    json.set("accelSpikeG", zSpike);
+    json.set("distanceCm", currentDist);
+    json.set("speedKmh", speed);
     json.set("timestamp", String(millis()));
-    json.set("deviceId", "ROAD_UNIT_01");
+    json.set("deviceId", DEVICE_ID);
+    json.set("status", "detected");
 
     Firebase.pushJSON(fbdo, "/hazards", json);
     Serial.println("Hazard logged to Firebase successfully!");

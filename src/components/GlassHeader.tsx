@@ -23,8 +23,7 @@ interface GlassHeaderProps {
   activeTab: TabType;
   onTabChange: (tab: TabType) => void;
   hazardCount: number;
-  isDriving: boolean;
-  onToggleDrive: () => void;
+  deviceOnline: boolean;
   soundEnabled: boolean;
   onToggleSound: () => void;
   onOpenReportModal: () => void;
@@ -37,8 +36,7 @@ export const GlassHeader: React.FC<GlassHeaderProps> = ({
   activeTab,
   onTabChange,
   hazardCount,
-  isDriving,
-  onToggleDrive,
+  deviceOnline,
   soundEnabled,
   onToggleSound,
   onOpenReportModal,
@@ -145,22 +143,20 @@ export const GlassHeader: React.FC<GlassHeaderProps> = ({
 
       {/* Secondary Soft Pill Sub-header */}
       <div className="px-4 pb-2 max-w-md mx-auto flex items-center justify-between gap-2 text-xs">
-        <button
-          id="drive-mode-pill-btn"
-          onClick={onToggleDrive}
-          className={`flex-1 py-1.5 px-3 rounded-xl font-medium flex items-center justify-center gap-1.5 transition-all border ${
-            isDriving
-              ? 'bg-rose-50 border-rose-200 text-rose-700 shadow-sm'
-              : 'bg-white/80 hover:bg-white border-slate-200/70 text-slate-700 shadow-xs'
+        <div
+          className={`flex-1 py-1.5 px-3 rounded-xl font-medium flex items-center justify-center gap-1.5 border ${
+            deviceOnline
+              ? 'bg-emerald-50 border-emerald-200 text-emerald-700 shadow-sm'
+              : 'bg-slate-50 border-slate-200/70 text-slate-500 shadow-xs'
           }`}
         >
-          <Activity className={`w-3.5 h-3.5 ${isDriving ? 'text-rose-600 animate-spin' : 'text-slate-500'}`} />
-          <span>{isDriving ? 'Live Trip Scanning...' : 'Start Drive Simulation'}</span>
-        </button>
+          <Activity className={`w-3.5 h-3.5 ${deviceOnline ? 'text-emerald-600 animate-pulse' : 'text-slate-400'}`} />
+          <span>{deviceOnline ? 'Live Tracking Active' : 'Waiting for ESP32 device...'}</span>
+        </div>
 
         <div className="flex items-center gap-1 bg-white/80 text-slate-700 px-2.5 py-1.5 rounded-xl border border-slate-200/70 font-mono text-[11px] shadow-xs">
-          <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-          <span>ESP32:LIVE</span>
+          <span className={`w-2 h-2 rounded-full ${deviceOnline ? 'bg-emerald-500' : 'bg-slate-400'}`}></span>
+          <span>{deviceOnline ? 'ESP32:LIVE' : 'ESP32:OFFLINE'}</span>
         </div>
       </div>
     </header>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Wifi, BatteryMedium, Signal, Radio } from 'lucide-react';
+import { Radio, RadioTower } from 'lucide-react';
 
 interface AndroidStatusBarProps {
   gpsConnected?: boolean;
@@ -7,8 +7,8 @@ interface AndroidStatusBarProps {
 }
 
 export const AndroidStatusBar: React.FC<AndroidStatusBarProps> = ({
-  gpsConnected = true,
-  iotConnected = true,
+  gpsConnected = false,
+  iotConnected = false,
 }) => {
   const [timeStr, setTimeStr] = useState<string>('');
 
@@ -30,27 +30,28 @@ export const AndroidStatusBar: React.FC<AndroidStatusBarProps> = ({
       className="w-full bg-slate-900/5 px-4 py-1.5 flex items-center justify-between text-xs font-medium text-slate-600 select-none border-b border-slate-200/40"
     >
       <div className="flex items-center gap-1.5">
-        <span className="font-semibold text-slate-800 tracking-tight">{timeStr || '12:30 PM'}</span>
-        {iotConnected && (
-          <span className="flex items-center gap-1 text-[10px] text-teal-600 bg-teal-50 px-1.5 py-0.5 rounded-full border border-teal-200/60 font-mono">
-            <Radio className="w-2.5 h-2.5 animate-pulse" />
-            ESP32
-          </span>
-        )}
+        <span className="font-semibold text-slate-800 tracking-tight">{timeStr}</span>
+        <span
+          className={`flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-full border font-mono ${
+            iotConnected
+              ? 'text-teal-600 bg-teal-50 border-teal-200/60'
+              : 'text-slate-400 bg-slate-50 border-slate-200/60'
+          }`}
+        >
+          <Radio className={`w-2.5 h-2.5 ${iotConnected ? 'animate-pulse' : ''}`} />
+          {iotConnected ? 'ESP32 Connected' : 'ESP32 Offline'}
+        </span>
       </div>
 
       <div className="flex items-center gap-2 text-slate-700">
-        {gpsConnected && (
-          <span className="text-[10px] text-sky-600 font-mono flex items-center gap-0.5">
-            GPS:FIX
-          </span>
-        )}
-        <Signal className="w-3.5 h-3.5 text-slate-600" />
-        <Wifi className="w-3.5 h-3.5 text-slate-700" />
-        <div className="flex items-center gap-0.5">
-          <span className="text-[10px] text-slate-700 font-semibold">92%</span>
-          <BatteryMedium className="w-4 h-4 text-emerald-600" />
-        </div>
+        <span
+          className={`text-[10px] font-mono flex items-center gap-0.5 ${
+            gpsConnected ? 'text-sky-600' : 'text-slate-400'
+          }`}
+        >
+          <RadioTower className="w-3 h-3" />
+          {gpsConnected ? 'GPS:FIX' : 'GPS:--'}
+        </span>
       </div>
     </div>
   );
